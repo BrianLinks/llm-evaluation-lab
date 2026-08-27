@@ -21,7 +21,7 @@ def test_llm_evaluation():
         },
     )
 
-    assert result.overall_score == 4.75
+    assert result.overall_score == 96.0
 
 
 def test_weighted_score():

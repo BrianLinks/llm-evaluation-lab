@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Dict
 
+from src.scoring import calculate_weighted_score
+
 
 @dataclass
 class EvaluationResult:
@@ -17,7 +19,7 @@ class LLMEvaluator:
     """
     Core evaluation engine for assessing AI-generated responses.
 
-    Scores are normalized on a 0-5 scale.
+    Scores are normalized to a weighted 0-100 overall quality score.
     """
 
     def __init__(self):
@@ -38,7 +40,7 @@ class LLMEvaluator:
 
         self._validate_scores(scores)
 
-        overall_score = sum(scores.values()) / len(scores)
+        overall_score = calculate_weighted_score(scores)
 
         return EvaluationResult(
             prompt=prompt,
@@ -47,7 +49,7 @@ class LLMEvaluator:
             relevance=scores["relevance"],
             completeness=scores["completeness"],
             instruction_following=scores["instruction_following"],
-            overall_score=round(overall_score, 2),
+            overall_score=overall_score,
         )
 
     def _validate_scores(self, scores: Dict[str, float]) -> None:
